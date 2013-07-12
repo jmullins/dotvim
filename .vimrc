@@ -1,8 +1,34 @@
-filetype plugin indent on
+set nocompatible              "Turn off vi compatibility
+filetype off                  "Required for vundle section  
 
-"Pathogen plugin for autoloading plugins ~/.vim/bundle
-call pathogen#infect()
-call pathogen#helptags()
+"Use vundle to manage plugins
+":BundleList - list configured bundles
+":BundleInstall - install(update) bundles
+":BundleSearch foo - search for foo
+":BundleClean - remove unused bundles
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+"Let vundle manage vundle (required)
+Bundle 'gmarik/vundle'
+"github.com/vim-scripts/* repos
+Bundle 'pep8'
+Bundle 'Wombat'
+Bundle 'wombat256.vim'
+"github repos
+Bundle 'nanotech/jellybeans.vim'
+Bundle 'fholgado/minibufexpl.vim'
+Bundle 'scrooloose/nerdtree'
+Bundle 'fs111/pydoc.vim'
+Bundle 'ervandew/supertab'
+Bundle 'scrooloose/syntastic'
+Bundle 'majutsushi/tagbar'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-surround'
+"other repos
+Bundle 'git://repo.or.cz/vcscommand'
+
+filetype plugin indent on
 
 "Display
 syntax on                
