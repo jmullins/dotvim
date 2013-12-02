@@ -156,6 +156,8 @@ let NERDTreeChDirMode=0
 let NERDTreeQuitOnOpen=1
 let NERDTreeShowHidden=1
 let NERDTreeKeepTreeInNewTab=1
+"Disable arrows next to directory names for terminals without unicode support
+"let g:NERDTreeDirArrows=0
 
 
 "PEP 8 (Style Guide for Python Code) Plugin
