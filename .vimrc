@@ -296,7 +296,7 @@ let NERDTreeWinSize=70
 let g:NERDTreeDirArrows=0
 
 "YouCompleteMe Plugin
-let g:ycm_path_to_python_interpreter='/home/jmullins31/3ps/bin/python'
+"let g:ycm_path_to_python_interpreter='/home/jmullins31/3ps/bin/python'
 let g:ycm_server_keep_logfiles=1
 let g:ycm_server_log_level='debug'
 
