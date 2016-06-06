@@ -1,7 +1,6 @@
 1. Clone repo
     ```
-    $ git clone https://github.com/jmullins/dotvim dotvim
-    $ cd dotvim; git submodule update --init .vim/bundle/vundle
+    $ git clone --recursive https://github.com/jmullins/dotvim dotvim
     ```
 
 2. Update vim config
@@ -14,7 +13,7 @@
 
 3. Install bundles
     ```
-    $ vim  #Open vim and run :BundleInstall
+    $ vim +PluginIntall +qall
     ```
 
 4. Restart vim
