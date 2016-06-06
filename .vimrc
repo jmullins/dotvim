@@ -2,36 +2,37 @@ set nocompatible              "Turn off vi compatibility
 filetype off                  "Required for vundle section  
 
 "Use vundle to manage plugins
-":BundleList - list configured bundles
-":BundleInstall - install(update) bundles
-":BundleSearch foo - search for foo
-":BundleClean - remove unused bundles
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+":PluginList - list configured bundles
+":PluginInstall - install(update) bundles
+":PluginSearch foo - search for foo
+":PluginClean - remove unused bundles
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 "Let vundle manage vundle (required)
-Bundle 'gmarik/vundle'
+Plugin 'VundleVim/Vundle.vim'
 "github.com/vim-scripts/* repos
-Bundle 'pep8'
-Bundle 'Wombat'
-Bundle 'wombat256.vim'
-Bundle 'vcscommand.vim'
+Plugin 'pep8'
+Plugin 'Wombat'
+Plugin 'wombat256.vim'
+Plugin 'vcscommand.vim'
 "github repos
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'scrooloose/nerdtree'
-Bundle 'fs111/pydoc.vim'
-Bundle 'ervandew/supertab'
-Bundle 'scrooloose/syntastic'
-Bundle 'majutsushi/tagbar'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'jakar/vim-json'
-Bundle 'itchyny/lightline.vim'
-Bundle 'ctrlpvim/ctrlp.vim'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'fs111/pydoc.vim'
+Plugin 'ervandew/supertab'
+Plugin 'scrooloose/syntastic'
+Plugin 'majutsushi/tagbar'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'jakar/vim-json'
+Plugin 'itchyny/lightline.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 "other repos
-"Bundle 'git://repo.or.cz/vcscommand'
+"Plugin 'git://repo.or.cz/vcscommand'
+call vundle#end()
 
 filetype plugin indent on
 
