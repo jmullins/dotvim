@@ -13,7 +13,7 @@
 
 3. Install bundles
     ```
-    $ vim +PluginIntall +qall
+    $ vim +PluginInstall +qall
     ```
 
 4. Restart vim
