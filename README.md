@@ -3,12 +3,15 @@
     $ git clone --recursive https://github.com/jmullins/dotvim dotvim
     ```
 
-2. Update vim config
+2. Backup existing vim config
     ```
     $ mv ~/.vimrc ~/.vimrc.sav
     $ mv ~/.vim ~/.vim.sav
-    $ cp dotvim/.vimrc ~
-    $ cp -r dotvim/.vim ~
+    ```
+2. Link new vim config
+    ```
+    $ ln -s dotvim/.vimrc ~/.vimrc
+    $ ln -s dotvim/.vim ~/.vim
     ```
 
 3. Install bundles
