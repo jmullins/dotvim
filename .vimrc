@@ -21,15 +21,21 @@ Plugin 'nanotech/jellybeans.vim'
 Plugin 'fholgado/minibufexpl.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fs111/pydoc.vim'
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
 Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
+Plugin 'godlygeek/tabular'"
+Plugin 'plasticboy/vim-markdown'
+Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'jakar/vim-json'
+Plugin 'elzr/vim-json'
 Plugin 'itchyny/lightline.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'avakhov/vim-yaml'
+Plugin 'hashivim/vim-terraform'
+Plugin 'mzlogin/vim-markdown-toc'
 "other repos
 "Plugin 'git://repo.or.cz/vcscommand'
 call vundle#end()
@@ -42,25 +48,33 @@ set nu                         "Line numbers on
 set showmatch                  "Show matching braces / brackets
 set vb                         "Visual bell
 set mouse=a                    "Enable mouse always
+set ttymouse=xterm2 
 
 "Colors
 if has('gui')
     colorscheme wombat256mod
+    set guifont=Hack\ 11
 elseif &t_Co >= 256
     colorscheme wombat256mod
 else
     set background=light
 endif
 
+"set ttyfast
+
 "Formatting
 set autoindent                 "Indent at same level of the previous line
 set cindent                    "Smarter indentation
 set et                         "Expand tabs to spaces
 set sw=4                       "Use idents of 4 spaces
+set list                       "Display white space
+set listchars=tab:>-           "Display tabs only
 set tpm=20                     "Max number of tabs
 set ts=4                       "Indentation every four columns
 set nowrap                     "Line wrapping off
 
+" Encoding
+set encoding=utf-8
 
 " Misc
 set autowrite                  "Save file when changing files
@@ -70,7 +84,10 @@ set pastetoggle=<F7>           "Paste toggle for sane pastes
 "Wild menu
 set wildmenu                   "Tab complete list
 set wildmode=list:longest,full "List matches, then lognest common part, then all.
+set wildignore+=/tmp/*,*.so    "Ignore these patterns
 
+
+"Wild
 
 "Command line 
 if has('cmdline_info')
@@ -118,23 +135,43 @@ set tags=./tags;/,$HOME/tags
 "Autocomplete
 "Auto open and close the popup menu / preview window
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menu,preview,longest "Autocomplete
+"set completeopt=menu,preview,longest "Autocomplete
 
 "Supertag plugin
 "let g:SuperTabDefaultCompletionType = "context"
 "let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-autocmd FileType *
-    \ if &omnifunc != '' |
-    \   call SuperTabChain(&omnifunc, "<c-p>") |
-    \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
-    \ endif
+"autocmd FileType *
+"    \ if &omnifunc != '' |
+"    \   call SuperTabChain(&omnifunc, "<c-p>") |
+"    \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
+"    \ endif
 
 "Minibuf Explorer Plugin
 let miniBufExplForceSyntaxEnable = 1
 
-"Tagbar pluign
+"Tagbar plugin
 map <leader>tb :TagbarToggle <CR>
 
+"Markdown plugin
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_toc_autofit = 1
+
+"Table Mode plugin
+"To enable / disable toggle <Leader>tm or in insert mode || / __
+let g:table_mode_corner='|'
+function! s:isAtStartOfLine(mapping)
+  let text_before_cursor = getline('.')[0 : col('.')-1]
+  let mapping_pattern = '\V' . escape(a:mapping, '\')
+  let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+  return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+endfunction
+
+inoreabbrev <expr> <bar><bar>
+          \ <SID>isAtStartOfLine('\|\|') ?
+          \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+inoreabbrev <expr> __
+          \ <SID>isAtStartOfLine('__') ?
+          \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 
 "Map control-space to autocomplete menu in insert mode
 imap <Nul> <C-R>=RopeCodeAssistInsertMode()<CR>
@@ -143,15 +180,20 @@ map <leader>raj :RopeGotoDefinition<CR>
 map <leader>rar :RopeRename<CR>
 
 "CtrlP plugin
-let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_max_height = 10		" maxiumum height of match window
-let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
-let g:ctrlp_mruf_max=450 		" number of recently opened files
-let g:ctrlp_max_files=0  		" do not limit the number of searchable files
-let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cmd = 'CtrlPMRU'         " start in mru mode, ctrl-f / ctrl-b to cycle
+let g:ctrlp_working_path_mode = 'ra' " nearest root (.git), directory current file
+let g:ctrlp_root_markers = ['.git']  " rook markers
+let g:ctrlp_max_height = 10          " maxiumum height of match window
+let g:ctrlp_switch_buffer = 'et'     " jump to a file if it's open already
+let g:ctrlp_mruf_max=450             " number of recently opened files
+let g:ctrlp_max_files=0              " do not limit the number of searchable files
+let g:ctrlp_use_caching = 1          " enable caching
+let g:ctrlp_clear_cache_on_exit = 0  " don't clear the cache
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v/(\.git|target|surefire-reports|tmp)$',
+  \ 'file': '\v\.(|so|pyc|class|jar)$'
+  \ }
 
 "Lightline plugin
 let g:lightline = {
@@ -159,7 +201,7 @@ let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste'],
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark' ] ],
-      \   'right': [ [ 'lineinfo' ],
+      \   'right': [ [ 'lineinfo'],
       \              [ 'percent' ],
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
@@ -178,7 +220,10 @@ let g:lightline = {
       \   'fugitive': 'LightLineFugitive',
       \   'ctrlpmark': 'LightLineCtrlPMark',
       \ },
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' }
       \ }
+
 
 function! LightLineModified()
   if &filetype == "help"
@@ -276,11 +321,12 @@ endfunction
 
 "Pydoc plugin
 let g:pydoc_cmd = "python -m pydoc"
-"let g:pydoc_open_cmd = 'tabnew'
+"let g:pydoc_open_cmd = 'enew'
 
 
 "Syntastic plugin
 let g:syntastic_javascript_jslint_conf = "--es5=false --white --undef --nomen --regexp --plusplus --bitwise --newcap --sloppy --vars"
+let g:syntastic_yaml_checkers = ['yamllint']
 
 "NERDTree plugin
 map <C-e> :NERDTreeToggle<CR>
@@ -297,12 +343,14 @@ let NERDTreeWinSize=70
 let g:NERDTreeDirArrows=0
 
 "YouCompleteMe Plugin
-"let g:ycm_path_to_python_interpreter='/home/jmullins31/3ps/bin/python'
+let g:ycm_path_to_python_interpreter='/home/jmullins31/3ps/bin/python'
 let g:ycm_server_keep_logfiles=1
+let g:ycm_filetype_blacklist = {}
 let g:ycm_server_log_level='debug'
 
 "Eclim Plugin"
 let g:EclimCompletionMethod='omnifunc'
+
 
 "Python settings
 au FileType python call ApplyPythonSettings()
@@ -322,6 +370,7 @@ function ApplyJavaSettings()
     map <leader>js :JavaSet<CR>
     map <leader>ju :JUnit<CR>
     map <leader>jdp :JavaDocPreview<CR>
+    map <leader>js :JavaSearch -a e<CR>
 endfunction
 
 "C++ settings
@@ -336,26 +385,8 @@ endfunction
 "Avro Schema settings
 au BufRead,BufNewFile *.avsc set filetype=json
 
+"Yaml template settings
+au BufRead,BufNewFile *.yml.j2 set filetype=yaml
+au BufRead,BufNewFile *.yaml.j2 set filetype=yaml
 
-
-"Below is needed to make Python omnicomplete work with virutalenv's and
-"django. Django imports will fail if env variables DJANGO_SETTINGS_MODULE
-"is not present.
-if has('python')
-python << EOF
-import os
-import sys
-import vim
-
-DJANGO_SETTINGS_MODULE='settings'
-
-virtualenv  = os.getenv('VIRTUAL_ENV')
-if virtualenv:
-    sys.path.insert(0, virtualenv)
-    
-    activate_this = os.path.join(virtualenv, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-    
-    os.environ['DJANGO_SETTINGS_MODULE'] = DJANGO_SETTINGS_MODULE
-EOF
-endif
+let g:vim_json_syntax_conceal = 0
